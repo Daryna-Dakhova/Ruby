@@ -15,13 +15,41 @@ def is_operator?(char)
   return char == '+' || char == '-' || char == '*' || char == '/'
 end
 
+# Функція для перевірки ділення на нуль
+def division_by_zero?(tokens)
+  tokens.each_with_index do |token, i|
+    if token == '/' && tokens[i + 1] == '0'
+      return true
+    end
+  end
+  return false
+end
+
+# Функція для перевірки синтаксичних помилок
+def valid_expression?(tokens)
+  return false if is_operator?(tokens.last) # Останній символ не повинен бути оператором
+
+  tokens.each_with_index do |token, i|
+    if is_operator?(token) && is_operator?(tokens[i + 1]) # Два оператори поспіль
+      return false
+    end
+  end
+  return true
+end
+
 # Функція для перетворення інфіксного виразу у RPN
 def to_rpn(expression)
+  tokens = expression.split(' ')  # Розбиваємо вираз на частини
+
+  if division_by_zero?(tokens)
+    return "Помилка: ділення на нуль"
+  elsif !valid_expression?(tokens)
+    return "Помилка: некоректний синтаксис"
+  end
+
   output = []
   operators = []
 
-  tokens = expression.split(' ')  # Розбиваємо вираз на частини
-  
   tokens.each do |token|
     if token.match?(/\d+/)  # Якщо це число
       output << token
@@ -41,8 +69,10 @@ def to_rpn(expression)
   return output.join(' ')  # Повертаємо результат
 end
 
-# Приклад використання
-input = "2 + 1 * 4"
+# Отримання введення виразу з клавіатури
+puts "Введіть математичний вираз (наприклад, 2 + 3 * 4):"
+input = gets.chomp
+
+# Обробка виразу та виведення результату
 rpn_output = to_rpn(input)
-puts "Вхідний вираз: #{input}"
 puts "RPN результат: #{rpn_output}"
