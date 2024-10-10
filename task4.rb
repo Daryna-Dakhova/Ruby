@@ -1,22 +1,12 @@
 def valid_ipv4?(ip)
-  # Розділяємо IP-адресу на частини по крапках
   parts = ip.split(".")
-  
-  # Перевіряємо, чи є рівно 4 частини
-  if parts.length != 4
-    return false
-  end
+  return false if parts.length != 4
 
-  # Перевіряємо кожну частину IP-адреси
   parts.each do |part|
-    # Перевіряємо, чи частина є числом і чи лежить у діапазоні від 0 до 255
-    if part.to_i.to_s != part || part.to_i < 0 || part.to_i > 255
-      return false
-    end
+    return false if part.to_i.to_s != part || part.to_i < 0 || part.to_i > 255 || part.start_with?('0') && part != '0'
   end
 
-  # Якщо всі частини пройшли перевірку, повертаємо true
-  return true
+  true
 end
 
 # Приклади використання
